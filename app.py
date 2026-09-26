@@ -136,14 +136,14 @@ def render_audit_status(status: str, pass_rate) -> str:
 
 THEME_COLORS = {
     "light": {
-        "bg": "#F5F7F9",
-        "bg-secondary": "#EEF1F4",
+        "bg": "#F7F8FA",
+        "bg-secondary": "#F0F2F6",
         "card": "#FFFFFF",
-        "card-hover": "#F8F9FB",
-        "border": "#D8DEE5",
-        "text-primary": "#202B35",
-        "text-secondary": "#475467",
-        "text-muted": "#667085",
+        "card-hover": "#FAFBFC",
+        "border": "#D8DFE8",
+        "text-primary": "#0B1F49",
+        "text-secondary": "#455775",
+        "text-muted": "#6C7A92",
         "success": "#16794A",
         "success-soft": "#EAF6EF",
         "warning": "#9A5B00",
@@ -151,7 +151,7 @@ THEME_COLORS = {
         "error": "#B42332",
         "error-soft": "#FEF0F0",
         "accent": "#C8102E",
-        "accent-strong": "#A90D27",
+        "accent-strong": "#A50F29",
         "accent-soft": "#FFF0F2",
         "button-text": "#FFFFFF",
         "shadow": "rgba(16, 24, 40, 0.06)",
@@ -171,9 +171,9 @@ THEME_COLORS = {
         "warning-soft": "#44331C",
         "error": "#FF8993",
         "error-soft": "#472329",
-        "accent": "#F06A7D",
-        "accent-strong": "#D94A60",
-        "accent-soft": "#40232B",
+        "accent": "#E36A7C",
+        "accent-strong": "#F3A6B1",
+        "accent-soft": "#40212A",
         "button-text": "#FFFFFF",
         "shadow": "rgba(0, 0, 0, 0.22)",
     },
@@ -258,15 +258,21 @@ render_html(
         border-radius: 7px !important;
     }
 
-    .stMultiSelect [data-baseweb="tag"] {
-        background-color: var(--accent-soft) !important;
-        color: var(--accent-strong) !important;
+    [data-testid="stMultiSelect"] [data-tag] {
+        background-color: var(--card) !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 999px !important;
+        color: var(--text-primary) !important;
     }
 
-    .stMultiSelect [data-baseweb="tag"] span,
-    .stMultiSelect [data-baseweb="tag"] svg {
-        color: var(--accent-strong) !important;
-        fill: var(--accent-strong) !important;
+    [data-testid="stMultiSelect"] [data-tag] span {
+        color: var(--text-primary) !important;
+    }
+
+    [data-testid="stMultiSelect"] [data-tag] button,
+    [data-testid="stMultiSelect"] [data-tag] svg {
+        color: var(--accent) !important;
+        fill: var(--accent) !important;
     }
 
     .stTextInput input::placeholder {
@@ -310,6 +316,26 @@ render_html(
         fill: var(--button-text) !important;
     }
 
+    [data-testid="stFormSubmitButton"] button {
+        background: var(--accent) !important;
+        color: var(--button-text) !important;
+        border: 0 !important;
+        border-radius: 7px !important;
+        min-height: 48px;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    [data-testid="stFormSubmitButton"] button:hover {
+        background: var(--accent-strong) !important;
+    }
+
+    [data-testid="stFormSubmitButton"] button span,
+    [data-testid="stFormSubmitButton"] button svg {
+        color: var(--button-text) !important;
+        fill: var(--button-text) !important;
+    }
+
     .stDownloadButton button {
         background-color: var(--card);
         border: 1px solid var(--border);
@@ -331,49 +357,10 @@ render_html(
 
     /* ---------- HERO ---------- */
 
-    .hero {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-left: 4px solid var(--accent);
-        padding: 20px 24px;
-        border-radius: 8px;
-        margin-bottom: 22px;
-        box-shadow: 0 3px 12px var(--shadow);
-    }
-
-    .hero-title {
-        font-size: 29px;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: 5px;
-    }
-
-    .hero-subtitle {
-        font-size: 15px;
-        color: var(--text-secondary);
-        max-width: 760px;
-    }
-
-    .hero-badges {
-        margin-top: 12px;
-    }
-
-    .hero-badge {
-        display: inline-block;
-        margin-right: 6px;
-        padding: 5px 9px;
-        border-radius: 5px;
-        background: var(--accent-soft);
-        border: 1px solid var(--border);
-        color: var(--accent-strong);
-        font-size: 12px;
-        font-weight: 600;
-    }
-
     /* ---------- SECTION HEADERS ---------- */
 
     .section-title {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: 700;
         color: var(--text-primary);
         margin-top: 14px;
@@ -382,7 +369,7 @@ render_html(
 
     .section-description {
         color: var(--text-muted);
-        font-size: 14px;
+        font-size: 16px;
         margin-bottom: 15px;
     }
 
@@ -398,7 +385,7 @@ render_html(
     }
 
     .card-title {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 650;
         color: var(--text-muted);
         text-transform: uppercase;
@@ -414,7 +401,7 @@ render_html(
     }
 
     .card-small {
-        font-size: 13px;
+        font-size: 14px;
         color: var(--text-muted);
         margin-top: 5px;
     }
@@ -430,7 +417,7 @@ render_html(
         border: 1px solid var(--border);
         border-radius: 6px;
         padding: 9px 11px;
-        font-size: 13px;
+        font-size: 14px;
         color: var(--text-secondary);
         margin-bottom: 8px;
     }
@@ -682,7 +669,7 @@ render_html(
         padding: 9px 10px;
         border-radius: 6px;
         margin-bottom: 4px;
-        font-size: 13px;
+        font-size: 14px;
         color: var(--text-secondary);
         position: relative;
     }
@@ -697,12 +684,20 @@ render_html(
         font-size: 11px;
         font-weight: 700;
         color: var(--text-muted);
-        min-width: 18px;
+        display: inline-grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        border: 1px solid var(--border);
+        border-radius: 50%;
     }
 
     .workflow-step.active .workflow-num,
     .workflow-step.done .workflow-num {
-        color: var(--accent-strong);
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--button-text);
     }
 
     .workflow-check {
@@ -723,25 +718,175 @@ render_html(
         border-radius: inherit;
     }
 
-    /* ---------- STATUS DOT ---------- */
-
-    .status-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--success);
-        margin-right: 6px;
-    }
-
-    /* ---------- MISC ---------- */
-
-    hr { border-color: var(--border) !important; }
-
-    [data-testid="stExpander"] {
+    .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+        min-height: 280px;
+        overflow: hidden;
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 7px;
+        border-radius: 8px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 18px var(--shadow);
+    }
+
+    .hero-copy {
+        align-self: center;
+        padding: 32px 34px;
+    }
+
+    .hero-eyebrow {
+        color: var(--accent-strong);
+        font-size: 13px;
+        font-weight: 750;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+
+    .hero-visual {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        min-height: 280px;
+        padding: 22px;
+        background-color: #21394F;
+        background-image:
+            linear-gradient(0deg, rgba(10, 27, 46, 0.78), rgba(10, 27, 46, 0.04) 72%),
+            url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=85");
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hero-visual-caption {
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 650;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-title {
+        max-width: 660px;
+        font-family: Cambria, Georgia, serif;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--text-primary);
+        margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        max-width: 620px;
+    }
+
+    .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 17px;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        margin: 0;
+        padding: 5px 9px;
+        border-radius: 5px;
+        background: var(--accent-soft);
+        border: 1px solid var(--border);
+        color: var(--accent-strong);
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .setup-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        margin-bottom: 16px;
+    }
+
+    .setup-step {
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 30px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--button-text);
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .setup-heading-title {
+        color: var(--text-primary);
+        font-family: Cambria, Georgia, serif;
+        font-size: 23px;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+
+    .setup-heading-copy {
+        color: var(--text-muted);
+        font-size: 15px;
+        line-height: 1.45;
+        margin-top: 3px;
+    }
+
+    .deliverables {
+        min-height: 100%;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 20px;
+        box-shadow: 0 2px 9px var(--shadow);
+        border-radius: 8px;
+        margin: 8px 0 12px;
+    }
+
+    .deliverables-title {
+        color: var(--text-primary);
+        font-family: Cambria, Georgia, serif;
+        font-size: 23px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    .deliverable-row {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        padding: 14px 0;
+        border-top: 1px solid var(--border);
+    }
+
+    .deliverable-icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .deliverable-name {
+        color: var(--text-primary);
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    .deliverable-copy {
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.5;
+        margin-top: 4px;
     }
 
     [data-testid="stProgressBar"] > div > div {
@@ -759,19 +904,43 @@ render_html(
         border: 1px solid var(--border);
     }
 
-    [data-testid="stSegmentedControl"] {
+    [role="radiogroup"][aria-label="Appearance"] {
+        display: flex !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        overflow: visible !important;
         background: var(--bg-secondary);
         border-radius: 6px;
     }
 
-    [data-testid="stSegmentedControl"] button {
-        color: var(--text-secondary) !important;
+    [role="radiogroup"][aria-label="Appearance"] > button {
+        flex: 1 1 0 !important;
+        width: 33.333% !important;
+        min-width: 0 !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+        background: var(--bg-secondary) !important;
+        border: 1px solid var(--border) !important;
+        color: var(--text-primary) !important;
     }
 
-    [data-testid="stSegmentedControl"] button[aria-checked="true"] {
-        background: var(--card) !important;
+    [role="radiogroup"][aria-label="Appearance"] > button p,
+    [role="radiogroup"][aria-label="Appearance"] > button span {
+        color: var(--text-primary) !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+    }
+
+    [role="radiogroup"][aria-label="Appearance"] > button[aria-checked="true"] {
+        background: var(--accent-soft) !important;
+        border-color: var(--accent) !important;
         color: var(--accent-strong) !important;
         box-shadow: 0 1px 4px var(--shadow);
+    }
+
+    [role="radiogroup"][aria-label="Appearance"] > button[aria-checked="true"] p,
+    [role="radiogroup"][aria-label="Appearance"] > button[aria-checked="true"] span {
+        color: var(--accent-strong) !important;
     }
 
     [data-testid="stForm"] {
@@ -780,6 +949,12 @@ render_html(
         padding: 16px;
         background: var(--card);
         box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    [data-testid="stFormSubmitButton"] button {
+        min-height: 46px;
+        font-size: 14px;
+        letter-spacing: 0.1px;
     }
 
     .footer {
@@ -797,20 +972,37 @@ render_html(
         }
 
         .hero {
-            padding: 16px 17px;
             margin-bottom: 16px;
+            grid-template-columns: 1fr;
+        }
+
+        .hero-copy {
+            padding: 20px 18px;
         }
 
         .hero-title {
-            font-size: 24px;
+            font-size: 30px;
         }
 
-        .section-title {
-            font-size: 18px;
+        .hero-subtitle {
+            font-size: 34px;
+        }
+
+        .hero-visual {
+            font-size: 16px;
+            background-position: center 38%;
+        }
+
+            font-size: 21px;
+            font-size: 20px;
         }
 
         .card {
             padding: 13px 14px;
+        }
+
+        .deliverables {
+            margin-top: 8px;
         }
     }
 
@@ -825,9 +1017,10 @@ render_html(
 
 if "results" not in st.session_state:
     st.session_state.results = None
-
 if "running" not in st.session_state:
     st.session_state.running = False
+if "workflow_step" not in st.session_state:
+    st.session_state.workflow_step = 1
 
 
 # ============================================================
@@ -842,14 +1035,38 @@ WORKFLOW_STEPS = [
     "Advisor Review",
 ]
 
-with st.sidebar:
 
-    render_html(
-        """
-        <div class="brand-title">MARSH</div>
-        <div class="brand-subtitle">AI Advisory Workspace</div>
-        """
+def render_workflow_status(placeholder, active_step, complete=False):
+    progress_width = 100 if complete else round(active_step / len(WORKFLOW_STEPS) * 100)
+    steps_html = (
+        '<div class="workflow-heading">'
+        '<span class="workflow-label">Workflow</span>'
+        f'<span class="workflow-count">{active_step:02d} / {len(WORKFLOW_STEPS):02d}</span>'
+        '</div>'
+        '<div class="workflow-progress-track">'
+        f'<div class="workflow-progress-fill" style="width:{progress_width}%"></div>'
+        '</div>'
     )
+    for index, step in enumerate(WORKFLOW_STEPS, 1):
+        if complete or index < active_step:
+            css_class = "workflow-step done"
+            marker = '<span class="workflow-check">✓</span>'
+        elif index == active_step:
+            css_class = "workflow-step active"
+            marker = f'<span class="workflow-num">{index:02d}</span>'
+        else:
+            css_class = "workflow-step"
+            marker = f'<span class="workflow-num">{index:02d}</span>'
+        steps_html += f'<div class="{css_class}">{marker}<span>{esc(step)}</span></div>'
+    placeholder.markdown(steps_html, unsafe_allow_html=True)
+
+with st.sidebar:
+    marsh_logo_path = Path(__file__).resolve().parent / "assets" / "marsh_logo.png"
+    if marsh_logo_path.exists():
+        st.image(str(marsh_logo_path), width=150)
+    else:
+        render_html('<div class="brand-title">MARSH</div>')
+    render_html('<div class="brand-subtitle">AI Advisory Workspace</div>')
 
     st.segmented_control(
         "Appearance",
@@ -858,53 +1075,39 @@ with st.sidebar:
         key="ui_theme",
     )
 
-    has_results = st.session_state.results is not None
-
-    current_step = len(WORKFLOW_STEPS) if has_results else 1
-    progress_width = 100 if has_results else round(100 / len(WORKFLOW_STEPS))
-    steps_html = (
-        '<div class="workflow-heading">'
-        '<span class="workflow-label">Workflow</span>'
-        f'<span class="workflow-count">{current_step:02d} / {len(WORKFLOW_STEPS):02d}</span>'
-        '</div>'
-        '<div class="workflow-progress-track">'
-        f'<div class="workflow-progress-fill" style="width:{progress_width}%"></div>'
-        '</div>'
+    workflow_status_slot = st.empty()
+    current_step = (
+        len(WORKFLOW_STEPS)
+        if st.session_state.results is not None
+        else max(1, min(int(st.session_state.workflow_step), len(WORKFLOW_STEPS)))
     )
-    for i, step in enumerate(WORKFLOW_STEPS, 1):
-        if has_results:
-            css_class = "workflow-step done"
-            marker = '<span class="workflow-check">✓</span>'
-        elif i == 1:
-            css_class = "workflow-step active"
-            marker = f'<span class="workflow-num">{i:02d}</span>'
-        else:
-            css_class = "workflow-step"
-            marker = f'<span class="workflow-num">{i:02d}</span>'
-        steps_html += f'<div class="{css_class}">{marker}<span>{esc(step)}</span></div>'
-
-    render_html(steps_html)
-
+    render_workflow_status(
+        workflow_status_slot,
+        current_step,
+        complete=st.session_state.results is not None,
+    )
     st.markdown("---")
 
     with st.expander("System Details"):
         st.caption("Knowledge Base")
         st.success("114 policy chunks indexed")
-
         st.caption("LLM")
         st.info("Groq · GPT-OSS 120B")
-
         st.caption("Vector Store")
         st.info("ChromaDB")
-
         st.caption("Embeddings")
         st.info("BGE-M3")
 
     st.markdown("---")
-
     if st.button("Reset workspace", width="stretch", icon=":material/refresh:"):
         st.session_state.results = None
+        st.session_state.workflow_step = 1
         st.rerun()
+
+
+def set_workflow_step(step, complete=False):
+    st.session_state.workflow_step = step
+    render_workflow_status(workflow_status_slot, step, complete=complete)
 
 
 # ============================================================
@@ -914,15 +1117,20 @@ with st.sidebar:
 render_html(
     """
     <div class="hero">
-        <div class="hero-title">Marsh AI Pitch Advisor</div>
-        <div class="hero-subtitle">
-            AI-powered insurance pitch generation, policy intelligence
-            and content verification.
+        <div class="hero-copy">
+            <div class="hero-eyebrow">Marsh · AI advisory workspace</div>
+            <div class="hero-title">Turn client risk into clearer advice.</div>
+            <div class="hero-subtitle">
+                Build a company-specific pitch grounded in policy evidence, with claim-level review before delivery.
+            </div>
+            <div class="hero-badges">
+                <span class="hero-badge">Evidence grounded</span>
+                <span class="hero-badge">Source traceable</span>
+                <span class="hero-badge">Advisor reviewed</span>
+            </div>
         </div>
-        <div class="hero-badges">
-            <span class="hero-badge">Evidence Grounded</span>
-            <span class="hero-badge">AI Assisted</span>
-            <span class="hero-badge">Human Reviewed</span>
+        <div class="hero-visual" role="img" aria-label="Modern commercial office building">
+            <div class="hero-visual-caption">Better-supported decisions start with the evidence.</div>
         </div>
     </div>
     """
@@ -934,21 +1142,42 @@ render_html(
 # ============================================================
 
 section_title(
-    "Client Setup",
-    "Enter a client and select the policy documents to analyse."
+    "Create a client pitch",
+    "Start with a company profile and the policy documents already in your knowledge base."
 )
 
-with st.form("client_setup", clear_on_submit=False):
-    col1, col2 = st.columns([1.2, 1])
+setup_column, deliverables_column = st.columns([1.65, 0.85], gap="large")
 
-    with col1:
+with setup_column:
+    with st.form("client_setup", clear_on_submit=False):
+        render_html(
+            """
+            <div class="setup-heading">
+                <span class="setup-step">1</span>
+                <div>
+                    <div class="setup-heading-title">Client and policy inputs</div>
+                    <div class="setup-heading-copy">Choose the client and the indexed policy material for this analysis.</div>
+                </div>
+            </div>
+            """
+        )
         company_name = st.text_input(
             "Company name",
             placeholder="e.g. Infosys, TCS, Accenture",
             value="",
         )
 
-    with col2:
+        render_html(
+            """
+            <div class="setup-heading" style="margin-top:12px; margin-bottom:10px;">
+                <span class="setup-step">2</span>
+                <div>
+                    <div class="setup-heading-title">Policy documents</div>
+                    <div class="setup-heading-copy">Select one or more documents from the current knowledge base.</div>
+                </div>
+            </div>
+            """
+        )
         data_folder = Path("data")
         available_pdfs = [
             file.name for file in data_folder.glob("*.pdf")
@@ -957,13 +1186,44 @@ with st.form("client_setup", clear_on_submit=False):
             "Policy documents",
             available_pdfs,
             default=available_pdfs,
+            format_func=lambda file_name: Path(file_name).stem,
+            label_visibility="collapsed",
         )
 
-    generate = st.form_submit_button(
-        "Generate client pitch",
-        type="primary",
-        width="stretch",
-        icon=":material/auto_awesome:",
+        generate = st.form_submit_button(
+            "Generate client pitch",
+            type="primary",
+            width="stretch",
+            icon=":material/auto_awesome:",
+        )
+
+with deliverables_column:
+    render_html(
+        """
+        <div class="deliverables">
+            <div class="deliverables-title">What you’ll get</div>
+            <div class="deliverable-row">
+                <div class="deliverable-icon">01</div>
+                <div><div class="deliverable-name">Client risk profile</div>
+                <div class="deliverable-copy">Company context and priority workforce exposures.</div></div>
+            </div>
+            <div class="deliverable-row">
+                <div class="deliverable-icon">02</div>
+                <div><div class="deliverable-name">Evidence-matched benefits</div>
+                <div class="deliverable-copy">Relevant policy benefits with source and page references.</div></div>
+            </div>
+            <div class="deliverable-row">
+                <div class="deliverable-icon">03</div>
+                <div><div class="deliverable-name">Claim audit</div>
+                <div class="deliverable-copy">Support status and traceability for generated claims.</div></div>
+            </div>
+            <div class="deliverable-row">
+                <div class="deliverable-icon">04</div>
+                <div><div class="deliverable-name">Advisor-ready files</div>
+                <div class="deliverable-copy">Editable pitch deck and downloadable audit report.</div></div>
+            </div>
+        </div>
+        """
     )
 
 
@@ -1024,6 +1284,8 @@ if generate:
 
     try:
 
+        set_workflow_step(1)
+
         from src.company_profile import generate_company_profile
         from src.risk_mapping import map_risks_to_policies
         from src.audit import audit_pitch_claims
@@ -1043,6 +1305,7 @@ if generate:
         # RISK MAPPING
         # ----------------------------------------------------
 
+        set_workflow_step(2)
         progress.progress(28, text=f"02 · {stage_labels[1]}")
 
         mappings = map_risks_to_policies(
@@ -1050,6 +1313,7 @@ if generate:
             top_k=5
         )
 
+        set_workflow_step(3)
         progress.progress(40, text=f"03 · {stage_labels[2]}")
 
         # ----------------------------------------------------
@@ -1072,6 +1336,7 @@ if generate:
         # AUDIT
         # ----------------------------------------------------
 
+        set_workflow_step(4)
         progress.progress(58, text=f"04 · {stage_labels[3]}")
 
         claims = [item["benefit"] for item in candidate_benefits]
@@ -1098,6 +1363,7 @@ if generate:
         # POLICY SCORING
         # ----------------------------------------------------
 
+        set_workflow_step(5)
         progress.progress(74, text=f"05 · {stage_labels[4]}")
 
         policy_scores = {}
@@ -1171,6 +1437,11 @@ if generate:
             "audit_path": audit_path,
             "company_slug": slug,
         }
+        render_workflow_status(
+            workflow_status_slot,
+            len(WORKFLOW_STEPS),
+            complete=True,
+        )
 
         st.success("Client pitch generated successfully.")
 

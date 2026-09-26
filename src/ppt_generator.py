@@ -1,6 +1,8 @@
 from pathlib import Path
 from copy import deepcopy
+from io import BytesIO
 import re
+from urllib.request import Request, urlopen
 
 from pptx import Presentation
 from pptx.dml.color import RGBColor
@@ -20,6 +22,11 @@ from pptx.util import Pt, Inches
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_PATH = PROJECT_ROOT / "templates" / "Marsh_AI_Pitch_Template.pptx"
 LOGO_PATH = PROJECT_ROOT / "assets" / "marsh_logo.png"
+BUSINESS_IMAGE_URL = (
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab"
+    "?auto=format&fit=crop&w=1400&q=85"
+)
+_BUSINESS_IMAGE_BYTES = None
 
 # Safe font-size ranges for dynamic content.
 FONT_MIN = {
@@ -517,6 +524,57 @@ def _add_profile_panel(slide, x, y, width, height, title):
     return panel
 
 
+def _add_business_image(slide, x, y, width, height):
+    global _BUSINESS_IMAGE_BYTES
+
+    if _BUSINESS_IMAGE_BYTES is None:
+        try:
+            request = Request(
+                BUSINESS_IMAGE_URL,
+                headers={"User-Agent": "MarshPitchAdvisor/1.0"},
+            )
+            with urlopen(request, timeout=4) as response:
+                _BUSINESS_IMAGE_BYTES = response.read()
+        except Exception:
+            _BUSINESS_IMAGE_BYTES = b""
+
+    if not _BUSINESS_IMAGE_BYTES:
+        _add_profile_panel(slide, x, y, width, height, "BUSINESS CONTEXT")
+        _add_workflow_text(
+            slide, "Company operating context", x + 0.18, y + 0.45,
+            width - 0.36, 0.32, 12, INK, True,
+        )
+        _add_workflow_text(
+            slide, "See the overview and workforce risks on this slide.",
+            x + 0.18, y + 0.85, width - 0.36, 0.60, 10, MUTED,
+        )
+        return
+
+    inset = 0.04
+    image_width = width - inset * 2
+    image_height = height - inset * 2
+    image = slide.shapes.add_picture(
+        BytesIO(_BUSINESS_IMAGE_BYTES),
+        Inches(x + inset),
+        Inches(y + inset),
+        width=Inches(image_width),
+        height=Inches(image_height),
+    )
+    source_width, source_height = image.image.size
+    source_ratio = source_width / source_height
+    frame_ratio = image_width / image_height
+    if source_ratio > frame_ratio:
+        horizontal_crop = (1 - frame_ratio / source_ratio) / 2
+        image.crop_left = horizontal_crop
+        image.crop_right = horizontal_crop
+    elif source_ratio < frame_ratio:
+        vertical_crop = (1 - source_ratio / frame_ratio) / 2
+        image.crop_top = vertical_crop
+        image.crop_bottom = vertical_crop
+
+    image._element.nvPicPr.cNvPr.set("descr", "Modern commercial office building")
+
+
 def _redesign_company_overview_slide(slide, overview):
     """Render slide 1 from fields actually returned by the company profile."""
     for shape in slide.shapes:
@@ -531,7 +589,6 @@ def _redesign_company_overview_slide(slide, overview):
     industry = str(overview.get("industry", "")).strip() or "Not provided"
     company_size = str(overview.get("company_size", "")).strip() or "Not provided"
     business_overview = str(overview.get("business_overview", "")).strip()
-    assumptions = _profile_items(overview.get("assumptions", []))
     risks = []
     for item in _profile_items(overview.get("key_risks", [])):
         if isinstance(item, dict):
@@ -590,47 +647,13 @@ def _redesign_company_overview_slide(slide, overview):
         business_overview or "No business overview was returned in the company profile.",
         540,
     )
-    overview_font = 11 if len(overview_text) <= 320 else 10
+    overview_font = 12.5 if len(overview_text) <= 320 else 11.5
     _add_workflow_text(
         slide, overview_text, 4.04, 2.46, 5.62, 1.72,
         overview_font, INK,
     )
 
-    _add_profile_panel(slide, 10.07, 2.06, 2.84, 2.28, "ASSUMPTIONS")
-    if assumptions:
-        shown_assumptions = assumptions[:3]
-        for index, assumption in enumerate(shown_assumptions):
-            text = assumption if isinstance(assumption, str) else str(
-                assumption.get("assumption") or assumption.get("text") or ""
-            ).strip()
-            if not text:
-                continue
-            y = 2.48 + index * 0.49
-            dot = slide.shapes.add_shape(
-                MSO_SHAPE.OVAL, Inches(10.27), Inches(y + 0.06),
-                Inches(0.07), Inches(0.07),
-            )
-            dot.fill.solid()
-            dot.fill.fore_color.rgb = MARSH_RED
-            dot.line.fill.background()
-            _add_workflow_text(
-                slide, text, 10.44, y,
-                2.25, 0.45, 8 if len(text) > 105 else 8.5, INK,
-            )
-        if len(assumptions) > 3:
-            _add_workflow_text(
-                slide, f"+ {len(assumptions) - 3} more profile note(s)",
-                10.28, 3.96, 2.35, 0.16, 7.5, MUTED,
-            )
-    else:
-        _add_workflow_text(
-            slide, "No assumptions were flagged by the profile.",
-            10.28, 2.52, 2.34, 0.85, 9.5, INK,
-        )
-    _add_workflow_text(
-        slide, "Confirm uncertain details before client use.",
-        10.28, 4.10, 2.34, 0.14, 7.5, MUTED,
-    )
+    _add_business_image(slide, 10.07, 2.06, 2.84, 2.28)
 
     risk_panel = slide.shapes.add_shape(
         MSO_SHAPE.ROUNDED_RECTANGLE,
