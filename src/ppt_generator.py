@@ -501,16 +501,6 @@ def _profile_items(value):
     return []
 
 
-def _risk_text(item):
-    if isinstance(item, dict):
-        title = item.get("risk") or item.get("title") or item.get("name")
-        detail = item.get("detail") or item.get("reason") or item.get("description")
-        if title and detail:
-            return f"{str(title).strip()}\n{str(detail).strip()}"
-        return str(title or detail or "").strip()
-    return str(item).strip()
-
-
 def _add_profile_panel(slide, x, y, width, height, title):
     panel = slide.shapes.add_shape(
         MSO_SHAPE.ROUNDED_RECTANGLE,
@@ -542,7 +532,20 @@ def _redesign_company_overview_slide(slide, overview):
     company_size = str(overview.get("company_size", "")).strip() or "Not provided"
     business_overview = str(overview.get("business_overview", "")).strip()
     assumptions = _profile_items(overview.get("assumptions", []))
-    risks = [text for text in (_risk_text(item) for item in _profile_items(overview.get("key_risks", []))) if text]
+    risks = []
+    for item in _profile_items(overview.get("key_risks", [])):
+        if isinstance(item, dict):
+            title = str(
+                item.get("title") or item.get("risk") or item.get("name") or ""
+            ).strip()
+            description = str(
+                item.get("description") or item.get("short_description") or ""
+            ).strip()
+        else:
+            title = str(item).strip()
+            description = ""
+        if title:
+            risks.append({"title": title, "description": description})
 
     _add_workflow_text(
         slide, "Understanding the client, their business context and key risk exposures.",
@@ -651,54 +654,53 @@ def _redesign_company_overview_slide(slide, overview):
 
     visible_risks = risks[:6]
     count = len(visible_risks)
-    columns = min(count, 3)
-    column_gap = 0.18
-    column_width = (12.01 - column_gap * (columns - 1)) / columns
-    row_gap = 0.12
-    row_height = 0.67 if count > 3 else 1.40
+    columns = 3 if count > 4 else 2
+    column_gap = 0.16
+    row_gap = 0.10
+    row_height = 0.64 if count > 1 else 1.10
     for index, risk in enumerate(visible_risks):
-        row = index // 3
-        column = index % 3
-        row_columns = min(3, count - row * 3)
+        row = index // columns
+        column = index % columns
+        row_columns = min(columns, count - row * columns)
         row_width = (12.01 - column_gap * (row_columns - 1)) / row_columns
         x = 0.66 + column * (row_width + column_gap)
-        y = 5.12 + row * (row_height + row_gap)
+        y = 5.08 + row * (row_height + row_gap)
+        card = slide.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE,
+            Inches(x), Inches(y), Inches(row_width), Inches(row_height),
+        )
+        card.fill.solid()
+        card.fill.fore_color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+        card.line.color.rgb = RGBColor(0xF0, 0xD2, 0xD8)
+        card.line.width = Pt(0.6)
         badge = slide.shapes.add_shape(
-            MSO_SHAPE.OVAL, Inches(x), Inches(y + 0.03),
-            Inches(0.36), Inches(0.36),
+            MSO_SHAPE.OVAL, Inches(x + 0.12), Inches(y + 0.12),
+            Inches(0.34), Inches(0.34),
         )
         badge.fill.solid()
         badge.fill.fore_color.rgb = MARSH_RED
         badge.line.fill.background()
         _add_workflow_text(
-            slide, f"{index + 1:02d}", x, y + 0.03, 0.36, 0.36,
+            slide, f"{index + 1:02d}", x + 0.12, y + 0.12, 0.34, 0.34,
             9.5, RGBColor(0xFF, 0xFF, 0xFF), True,
             align=PP_ALIGN.CENTER,
         )
-        risk_length = len(risk)
-        risk_font = (
-            8.5 if risk_length > 190 else 9 if risk_length > 145
-            else 10 if count > 3 else 11
-        )
         _add_workflow_text(
-            slide, risk.replace("\n", " "),
-            x + 0.50, y, row_width - 0.62, row_height,
-            risk_font, INK, True,
+            slide, _shorten(risk["title"], 48),
+            x + 0.58, y + 0.07, row_width - 0.72, 0.24,
+            9.5, INK, True,
         )
-        if column < row_columns - 1:
-            divider = slide.shapes.add_shape(
-                MSO_SHAPE.RECTANGLE,
-                Inches(x + row_width + column_gap / 2 - 0.005),
-                Inches(y - 0.01), Inches(0.01), Inches(row_height + 0.06),
+        if risk["description"]:
+            _add_workflow_text(
+                slide, _shorten(risk["description"], 92),
+                x + 0.58, y + 0.32, row_width - 0.72, row_height - 0.36,
+                8.3, MUTED,
             )
-            divider.fill.solid()
-            divider.fill.fore_color.rgb = RGBColor(0xF0, 0xD2, 0xD8)
-            divider.line.fill.background()
 
     if len(risks) > len(visible_risks):
         _add_workflow_text(
             slide, f"+ {len(risks) - len(visible_risks)} additional risks in the profile",
-            0.68, 6.62, 11.90, 0.14, 7.5, MUTED,
+            0.68, 6.60, 11.90, 0.14, 7.5, MUTED,
         )
 
 
